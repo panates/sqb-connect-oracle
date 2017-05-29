@@ -15,6 +15,9 @@ const DbPool = sqb.DbPool;
 //noinspection SpellCheckingInspection
 const oracledb = require('oracledb');
 
+/* External module dependencies. */
+const OracleSerializer = require('sqb-serializer-oracle');
+
 /**
  * @class
  * @extends DbPool
@@ -23,8 +26,7 @@ class OracledbPool extends DbPool {
 
     constructor(config) {
         super(config);
-        this.serializer = sqb.serializer({
-            dialect: 'oracle',
+        this.serializer = new OracleSerializer({
             namedParams: false,
             prettyPrint: config.prettyPrint
         });

@@ -20,8 +20,8 @@ const oracledb = require('oracledb');
 
 class OracledbConnection extends Connection {
 
-    constructor(driver, intlcon) {
-        super(driver);
+    constructor(dbpool, intlcon) {
+        super(dbpool);
         this.intlcon = intlcon;
     }
 
