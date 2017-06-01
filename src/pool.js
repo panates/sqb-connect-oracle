@@ -27,7 +27,7 @@ class OracledbPool extends DbPool {
     constructor(config) {
         super(config);
         this.serializer = new OracleSerializer({
-            namedParams: false,
+            namedParams: true,
             prettyPrint: config.prettyPrint
         });
     }
