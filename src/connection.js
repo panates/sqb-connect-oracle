@@ -55,15 +55,15 @@ class OracledbConnection extends Connection {
   //noinspection JSUnusedGlobalSymbols
   /**
    *
-   * @param sql
-   * @param params
-   * @param options
-   * @param callback
+   * @param {string} sql
+   * @param {Array|Object} params
+   * @param {Object} options
+   * @param {Function} callback
    * @private
    */
   _execute(sql, params, options, callback) {
 
-    //noinspection JSUnresolvedFunction
+    //noinspection JSUnresolvedFunction,Eslint
     super._execute.apply(this, arguments);
 
     assert.ok(!this.closed);
@@ -102,13 +102,13 @@ class OracledbConnection extends Connection {
   }
 
   //noinspection JSUnusedGlobalSymbols
-  commit() {
-    return this.intlcon.commit.apply(this.intlcon, arguments);
+  commit(...args) {
+    return this.intlcon.commit(...args);
   }
 
   //noinspection JSUnusedGlobalSymbols
-  rollback() {
-    return this.intlcon.rollback.apply(this.intlcon, arguments);
+  rollback(...args) {
+    return this.intlcon.rollback(...args);
   }
 
   meta() {

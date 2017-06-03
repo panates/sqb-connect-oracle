@@ -11,7 +11,7 @@
 const sqb = require('sqb');
 
 /**
- * @class
+ * @constructor
  * @public
  */
 class OracledbMetaData extends sqb.MetaData {
@@ -20,6 +20,7 @@ class OracledbMetaData extends sqb.MetaData {
   /**
    *
    * @param {Object} options
+   * @return {Statement}
    * @protected
    */
   _getStatement(options) {
@@ -43,6 +44,13 @@ class OracledbMetaData extends sqb.MetaData {
           options.type + ')');
   }
 
+  /**
+   *
+   * @param {Object} options
+   * @param {string} options.fields
+   * @return {Statement}
+   * @protected
+   */
   _getListSchemasStatement(options) {
     const srcflds = options.fields;
     const fields = [];
@@ -54,6 +62,13 @@ class OracledbMetaData extends sqb.MetaData {
         .from('all_users schemas');
   }
 
+  /**
+   *
+   * @param {Object} options
+   * @param {string} options.fields
+   * @return {Statement}
+   * @protected
+   */
   _getListTablesStatement(options) {
     const srcflds = options.fields;
     const fields = [];
@@ -93,6 +108,13 @@ class OracledbMetaData extends sqb.MetaData {
         .from('all_tables tbl');
   }
 
+  /**
+   *
+   * @param {Object} options
+   * @param {string} options.fields
+   * @return {Statement}
+   * @protected
+   */
   _getListColumnsStatement(options) {
     const srcflds = options.fields;
     const fields = [];
@@ -125,6 +147,13 @@ class OracledbMetaData extends sqb.MetaData {
         .from('all_tab_columns atc');
   }
 
+  /**
+   *
+   * @param {Object} options
+   * @param {string} options.fields
+   * @return {Statement}
+   * @protected
+   */
   _getListPrimaryKeysStatement(options) {
     const srcflds = options.fields;
     const fields = [];
@@ -154,6 +183,13 @@ class OracledbMetaData extends sqb.MetaData {
         .groupBy('ac.owner', 'ac.table_name', 'ac.constraint_name', 'ac.status');
   }
 
+  /**
+   *
+   * @param {Object} options
+   * @param {string} options.fields
+   * @return {Statement}
+   * @protected
+   */
   _getListForeignKeysStatement(options) {
     const srcflds = options.fields;
     const fields = [];
@@ -193,7 +229,14 @@ class OracledbMetaData extends sqb.MetaData {
         .where(['ac.constraint_type', 'R'])
         .groupBy('ac.owner', 'ac.table_name', 'ac.constraint_name', 'ac.status');
   }
-
 }
+
+/**
+ * @external Statement
+ */
+
+/**
+ * @external sqb.MetaData
+ */
 
 module.exports = OracledbMetaData;

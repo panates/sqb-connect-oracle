@@ -27,12 +27,14 @@ class OracledbPool extends DbPool {
 
   constructor(config) {
     super(config);
+    //noinspection JSUnusedGlobalSymbols
     this.serializer = new OracleSerializer({
       namedParams: true,
       prettyPrint: config.prettyPrint
     });
   }
 
+  //noinspection JSUnusedGlobalSymbols
   /**
    *
    * @return {string}
@@ -42,6 +44,7 @@ class OracledbPool extends DbPool {
     return super.schema || this.user;
   }
 
+  //noinspection JSUnusedGlobalSymbols
   meta() {
     return new OracledbMetaData(this);
   }
@@ -65,7 +68,7 @@ class OracledbPool extends DbPool {
 
   /**
    *
-   * @param callback
+   * @param {Function} callback
    * @private
    */
   _getOracleConnection(callback) {
@@ -98,7 +101,7 @@ class OracledbPool extends DbPool {
 
   /**
    *
-   * @param callback
+   * @param {Function} callback
    * @private
    */
   _getOraclePool(callback) {
@@ -112,8 +115,8 @@ class OracledbPool extends DbPool {
       return;
     }
 
-    const self = this,
-        cfg = self.config;
+    const self = this;
+    const cfg = self.config;
     self._poolQueue = [];
     self._poolQueue.push(callback);
 
