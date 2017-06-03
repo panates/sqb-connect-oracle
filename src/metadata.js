@@ -105,7 +105,8 @@ class OracledbMetaData extends sqb.MetaData {
               .as('table_comments')
       );
     return this.dbobj.select(...fields)
-        .from('all_tables tbl');
+        .from('all_tables tbl')
+        .orderBy('owner', 'table_name');
   }
 
   /**
@@ -144,7 +145,8 @@ class OracledbMetaData extends sqb.MetaData {
               .as('column_comments')
       );
     return this.dbobj.select(...fields)
-        .from('all_tab_columns atc');
+        .from('all_tab_columns atc')
+        .orderBy('owner', 'table_name', 'column_id');
   }
 
   /**
@@ -180,7 +182,8 @@ class OracledbMetaData extends sqb.MetaData {
                 ['acc.constraint_name', sqb.raw('ac.constraint_name')]
             ))
         .where(['ac.constraint_type', 'P'])
-        .groupBy('ac.owner', 'ac.table_name', 'ac.constraint_name', 'ac.status');
+        .groupBy('ac.owner', 'ac.table_name', 'ac.constraint_name', 'ac.status')
+        .orderBy('ac.owner', 'ac.table_name', 'ac.constraint_name');
   }
 
   /**
@@ -227,7 +230,8 @@ class OracledbMetaData extends sqb.MetaData {
                 ['acr.constraint_name', sqb.raw('ac.r_constraint_name')]
             ))
         .where(['ac.constraint_type', 'R'])
-        .groupBy('ac.owner', 'ac.table_name', 'ac.constraint_name', 'ac.status');
+        .groupBy('ac.owner', 'ac.table_name', 'ac.constraint_name', 'ac.status')
+        .orderBy('ac.owner', 'ac.table_name', 'ac.constraint_name');
   }
 }
 

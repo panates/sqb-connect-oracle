@@ -83,12 +83,10 @@ class OracledbPool extends DbPool {
           //noinspection JSUnresolvedVariable
           self.serverVersion =
               Math.trunc(internalConnection.oracleServerVersion / 100000000);
-          if (!internalConnection._sessionId)
-            internalConnection._sessionId =
-                (await internalConnection.execute('select sid from v$mystat where rownum <=1', [], {})).rows[0][0];
+          internalConnection._sessionId =
+              (await internalConnection.execute('select sid from v$mystat where rownum <=1', [], {})).rows[0][0];
           //noinspection JSUnresolvedVariable
-          if (self.config.schema &&
-              internalConnection.currentSchema !== self.config.schema)
+          if (self.config.schema)
             await internalConnection.execute('ALTER SESSION SET CURRENT_SCHEMA = ' +
                 self.config.schema, [], {autoCommit: true});
           callback(undefined, internalConnection);
