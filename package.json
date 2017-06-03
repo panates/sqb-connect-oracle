@@ -28,7 +28,7 @@
     "mocha": "^3.4.2"
   },
   "peerDependencies": {
-    "sqb": "^0.2.13",
+    "sqb": "^0.2.14",
     "sqb-serializer-oracle": "^0.0.6"
   },
   "engines": {
