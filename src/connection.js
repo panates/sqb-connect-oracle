@@ -6,6 +6,9 @@
  https://panates.github.io/sqb-oracledb/
  */
 
+/* Internal module dependencies. */
+const OracledbMetaData = require('./metadata');
+
 /* External module dependencies. */
 const {Connection} = require('sqb');
 const assert = require('assert');
@@ -75,6 +78,9 @@ class OracledbConnection extends Connection {
       outFormat: options.objectRows ? oracledb.OBJECT : oracledb.ARRAY
     };
 
+    this.intlcon.action = options.action || '';
+    this.intlcon.clientId = options.clientId || '';
+    this.intlcon.module = options.module || '';
     this.intlcon.execute(sql, params || [], oraOptions, function(err2, result) {
       if (err2) {
         err2.sql = sql;
@@ -103,6 +109,10 @@ class OracledbConnection extends Connection {
   //noinspection JSUnusedGlobalSymbols
   rollback() {
     return this.intlcon.rollback.apply(this.intlcon, arguments);
+  }
+
+  meta() {
+    return new OracledbMetaData(this);
   }
 
 }
