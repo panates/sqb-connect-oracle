@@ -8,6 +8,7 @@
 
 /* Internal module dependencies. */
 const OracledbMetaData = require('./metadata');
+const OracledbResultSet = require('./resultset');
 
 /* External module dependencies. */
 const {Connection} = require('sqb');
@@ -44,6 +45,15 @@ class OracledbConnection extends Connection {
   /**
    * @override
    */
+  prepare(statement, params, options) {
+    return super.prepare(...// eslint-disable-next-line
+        arguments);
+  }
+
+  //noinspection JSUnusedGlobalSymbols
+  /**
+   * @override
+   */
   _close() {
     super._close();
     if (this.intlcon) {
@@ -69,19 +79,22 @@ class OracledbConnection extends Connection {
     assert.ok(!this.closed);
 
     //noinspection JSUnresolvedVariable
+    const self = this;
     const oraOptions = {
       autoCommit: options.autoCommit,
-      extendedMetaData: options.extendedMetaData,
+      extendedMetaData: true, // options.extendedMetaData,
       maxRows: options.maxRows,
       prefetchRows: options.prefetchRows,
       resultSet: !!options.resultSet,
-      outFormat: options.objectRows ? oracledb.OBJECT : oracledb.ARRAY
+      outFormat: !options.resultSet && options.objectRows ?
+          oracledb.OBJECT : oracledb.ARRAY
     };
 
-    this.intlcon.action = options.action || '';
-    this.intlcon.clientId = options.clientId || '';
-    this.intlcon.module = options.module || '';
-    this.intlcon.execute(sql, params || [], oraOptions, function(err2, result) {
+    self.intlcon.action = options.action || '';
+    self.intlcon.clientId = options.clientId || '';
+    self.intlcon.module = options.module || '';
+    self.intlcon.execute(sql, params ||
+        [], oraOptions, function(err2, response) {
       if (err2) {
         err2.sql = sql;
         err2.params = params;
@@ -89,9 +102,31 @@ class OracledbConnection extends Connection {
         callback(err2);
       } else {
         const out = {};
-        out.rows = result.rows;
-        out.metaData = result.metaData;
-        if (options.showSql) {
+        const metaData = {};
+        response.metaData.forEach((item, idx) => {
+          const o = metaData[item.name] = {index: idx};
+          // fetchType
+          let a = fetchTypeMap[item.fetchType];
+          if (a) o.jsType = a;
+          a = dbTypeMap[item.dbType];
+          // dbType
+          if (a) o.dbType = a;
+          if (item.byteSize) o.byteSize = item.byteSize;
+          if (!item.nullable) o.required = true;
+          if (item.precision) o.precision = item.precision;
+          if (item.precision > 0) o.precision = item.precision;
+          else item.dbType = 'FLOAT';
+        });
+        if (options.resultSet) {
+          response.metaData = metaData;
+          out.resultSet = new OracledbResultSet(self, options.resultSet, response);
+        } else {
+          out.rows = response.rows;
+          out.metaData = metaData;
+        }
+        if (response.rowsAffected)
+          out.rowsAffected = response.rowsAffected;
+        if (options.debug) {
           out.sql = sql;
           out.params = params;
           out.options = options;
@@ -116,5 +151,31 @@ class OracledbConnection extends Connection {
   }
 
 }
+
+const fetchTypeMap = {
+  2001: 'String',
+  2002: 'Number',
+  2003: 'Date',
+  2004: 'ResultSet',
+  2005: 'Buffer',
+  2006: 'Clob',
+  2007: 'Blob'
+};
+
+const dbTypeMap = {
+  1: 'VARCHAR',
+  2: 'NUMBER',
+  12: 'DATE',
+  23: 'RAW',
+  96: 'CHAR',
+  100: 'BINARY_FLOAT,',
+  101: 'BINARY_DOUBLE',
+  104: 'ROWID',
+  112: 'CLOB',
+  113: 'BLOB',
+  187: 'TIMESTAMP',
+  188: 'TIMESTAMP_TZ',
+  232: 'TIMESTAMP_LTZ'
+};
 
 module.exports = OracledbConnection;

@@ -58,7 +58,7 @@ class OracledbPool extends DbPool {
    */
   _getConnection(callback) {
     const self = this;
-    this._getOracleConnection(function(err, conn) {
+    this._getOracleConnection((err, conn) => {
       if (err)
         callback(err);
       else
