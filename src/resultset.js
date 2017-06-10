@@ -18,7 +18,6 @@ class OracledbResultSet extends ResultSet {
 
   constructor(connection, options, response) {
     super(connection, options);
-    //console.log(response);
     this._nested = response.resultSet;
     this.metaData = response.metaData;
   }

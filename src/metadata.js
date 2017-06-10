@@ -146,7 +146,43 @@ class OracledbMetaData extends sqb.MetaData {
       );
     return this.dbobj.select(...fields)
         .from('all_tab_columns atc')
-        .orderBy('owner', 'table_name', 'column_id');
+        .orderBy('owner', 'table_name', 'column_id')
+        .onFetchRow((row, idx) => {
+          /* Map oracle data types to generic data types */
+          let dataType = row.DATA_TYPE;
+          switch (dataType) {
+            case 'NCHAR':
+              dataType = 'CHAR';
+              break;
+            case 'NCLOB':
+              dataType = 'CLOB';
+              break;
+            case 'VARCHAR2':
+            case 'NVARCHAR2':
+            case 'LONG':
+            case 'ROWID':
+            case 'UROWID':
+              dataType = 'VARCHAR';
+              break;
+            case 'LONG RAW':
+            case 'BINARY_FLOAT':
+            case 'BINARY_DOUBLE':
+            case 'RAW':
+              dataType = 'BUFFER';
+              break;
+            case 'DATE':
+              dataType = 'TIMESTAMP';
+              break;
+            default: {
+              let m = dataType.match(/TIMESTAMP\(?(\d+)?\)?(.+)?/);
+              if (m) {
+                dataType = 'TIMESTAMP';
+              }
+            }
+          }
+
+          row.DATA_TYPE = dataType;
+        });
   }
 
   /**
@@ -172,7 +208,7 @@ class OracledbMetaData extends sqb.MetaData {
           .else(0)
           .as('status'));
     if (!srcflds.length || srcflds.includes('columns'))
-      fields.push(sqb.raw('to_char(list(acc.column_name))', 'columns'));
+      fields.push(sqb.raw('to_char(listagg(acc.column_name) within group (order by null)) columns'));
     return this.dbobj.select(...fields)
         .from('all_constraints ac')
         .join(
@@ -209,13 +245,13 @@ class OracledbMetaData extends sqb.MetaData {
           .else(0)
           .as('status'));
     if (!srcflds.length || srcflds.includes('column_name'))
-      fields.push(sqb.raw('to_char(list(acc.column_name))', 'column_name'));
+      fields.push(sqb.raw('to_char(listagg(acc.column_name) within group (order by null)) column_name'));
     if (!srcflds.length || srcflds.includes('r_schema'))
-      fields.push(sqb.raw('to_char(list(ac.r_owner))', 'r_schema'));
+      fields.push(sqb.raw('to_char(listagg(ac.r_owner) within group (order by null)) r_schema'));
     if (!srcflds.length || srcflds.includes('r_table_name'))
-      fields.push(sqb.raw('to_char(list(acr.table_name))', 'r_table_name'));
+      fields.push(sqb.raw('to_char(listagg(acr.table_name) within group (order by null)) r_table_name'));
     if (!srcflds.length || srcflds.includes('r_columns'))
-      fields.push(sqb.raw('to_char(list(acr.column_name))', 'r_columns'));
+      fields.push(sqb.raw('to_char(listagg(acr.column_name) within group (order by null)) r_columns'));
 
     return this.dbobj.select(...fields)
         .from('all_constraints ac')

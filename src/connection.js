@@ -119,7 +119,8 @@ class OracledbConnection extends Connection {
         });
         if (options.resultSet) {
           response.metaData = metaData;
-          out.resultSet = new OracledbResultSet(self, options.resultSet, response);
+          out.resultSet =
+              new OracledbResultSet(self, options.resultSet, response);
         } else {
           out.rows = response.rows;
           out.metaData = metaData;

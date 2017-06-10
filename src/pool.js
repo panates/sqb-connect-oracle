@@ -30,7 +30,8 @@ class OracledbPool extends DbPool {
     //noinspection JSUnusedGlobalSymbols
     this.serializer = new OracleSerializer({
       namedParams: true,
-      prettyPrint: config.prettyPrint
+      prettyPrint: config.prettyPrint,
+      strictParams: true
     });
   }
 
