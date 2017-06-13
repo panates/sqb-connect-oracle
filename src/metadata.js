@@ -46,170 +46,105 @@ class OracledbMetaData extends sqb.MetaData {
 
   /**
    *
-   * @param {Object} options
-   * @param {string} options.fields
    * @return {Statement}
    * @protected
    */
-  _getListSchemasStatement(options) {
-    const srcflds = options.fields;
-    const fields = [];
-    if (!srcflds.length || srcflds.includes('schema_name'))
-      fields.push('username schema_name');
-    if (!srcflds.length || srcflds.includes('create_date'))
-      fields.push('created create_date');
-    return this.dbobj.select(...fields)
+  _getListSchemasStatement() {
+    return this.dbobj
+        .select('username schema_name', 'created create_date')
         .from('all_users schemas');
   }
 
   /**
    *
-   * @param {Object} options
-   * @param {string} options.fields
    * @return {Statement}
    * @protected
    */
-  _getListTablesStatement(options) {
-    const srcflds = options.fields;
-    const fields = [];
-    if (!srcflds.length || srcflds.includes('schema'))
-      fields.push('owner schema_name');
-    if (!srcflds.length || srcflds.includes('table_name'))
-      fields.push('table_name');
-    if (!srcflds.length || srcflds.includes('num_rows'))
-      fields.push('num_rows');
-    if (!srcflds.length || srcflds.includes('logging'))
-      fields.push(sqb.case()
-          .when(['logging', 'YES'])
-          .then(1)
-          .else(0)
-          .as('logging'));
-    if (!srcflds.length || srcflds.includes('partitioned'))
-      fields.push(sqb.case()
-          .when(['partitioned', 'YES'])
-          .then(1)
-          .else(0)
-          .as('partitioned'));
-    if (!srcflds.length || srcflds.includes('read_only'))
-      fields.push(sqb.case()
-          .when(['read_only', 'YES'])
-          .then(1)
-          .else(0)
-          .as('read_only'));
-    if (!srcflds.length || srcflds.includes('table_comments'))
-      fields.push(
-          sqb.select('comments')
-              .from('all_tab_comments atc')
-              .where(['atc.owner', sqb.raw('tbl.owner')],
-                  ['atc.table_name', sqb.raw('tbl.table_name')])
-              .as('table_comments')
-      );
-    return this.dbobj.select(...fields)
+  _getListTablesStatement() {
+    return this.dbobj
+        .select('owner schema_name', 'table_name',
+            'num_rows', 'read_only',
+            sqb.select('comments')
+                .from('all_tab_comments atc')
+                .where(['atc.owner', sqb.raw('tbl.owner')],
+                    ['atc.table_name', sqb.raw('tbl.table_name')])
+                .as('table_comments'))
         .from('all_tables tbl')
         .orderBy('owner', 'table_name');
   }
 
   /**
    *
-   * @param {Object} options
-   * @param {string} options.fields
    * @return {Statement}
    * @protected
    */
-  _getListColumnsStatement(options) {
-    const srcflds = options.fields;
-    const fields = [];
-    if (!srcflds.length || srcflds.includes('schema_name'))
-      fields.push('owner schema_name');
-    if (!srcflds.length || srcflds.includes('table_name'))
-      fields.push('table_name');
-    if (!srcflds.length || srcflds.includes('column_name'))
-      fields.push('column_name');
-    if (!srcflds.length || srcflds.includes('data_type'))
-      fields.push('data_type');
-    if (!srcflds.length || srcflds.includes('data_length'))
-      fields.push('data_length');
-    if (!srcflds.length || srcflds.includes('data_precision'))
-      fields.push('data_precision');
-    if (!srcflds.length || srcflds.includes('data_scale'))
-      fields.push('data_scale');
-    if (!srcflds.length || srcflds.includes('nullable'))
-      fields.push('nullable');
-    if (!srcflds.length || srcflds.includes('column_comments'))
-      fields.push(
-          sqb.select('comments')
-              .from('all_col_comments acc')
-              .where(['acc.owner', sqb.raw('atc.owner')],
-                  ['acc.table_name', sqb.raw('atc.table_name')],
-                  ['acc.column_name', sqb.raw('atc.column_name')])
-              .as('column_comments')
-      );
-    return this.dbobj.select(...fields)
+  _getListColumnsStatement() {
+    return this.dbobj
+        .select('owner schema_name', 'table_name',
+            'column_name', 'data_type', 'data_length', 'data_precision',
+            'data_scale', 'nullable',
+            sqb.select('comments')
+                .from('all_col_comments acc')
+                .where(['acc.owner', sqb.raw('atc.owner')],
+                    ['acc.table_name', sqb.raw('atc.table_name')],
+                    ['acc.column_name', sqb.raw('atc.column_name')])
+                .as('column_comments')
+        )
         .from('all_tab_columns atc')
         .orderBy('owner', 'table_name', 'column_id')
         .onFetchRow((row, idx) => {
           /* Map oracle data types to generic data types */
           let dataType = row.DATA_TYPE;
-          switch (dataType) {
-            case 'NCHAR':
-              dataType = 'CHAR';
-              break;
-            case 'NCLOB':
-              dataType = 'CLOB';
-              break;
-            case 'VARCHAR2':
-            case 'NVARCHAR2':
-            case 'LONG':
-            case 'ROWID':
-            case 'UROWID':
-              dataType = 'VARCHAR';
-              break;
-            case 'LONG RAW':
-            case 'BINARY_FLOAT':
-            case 'BINARY_DOUBLE':
-            case 'RAW':
-              dataType = 'BUFFER';
-              break;
-            case 'DATE':
-              dataType = 'TIMESTAMP';
-              break;
-            default: {
-              let m = dataType.match(/TIMESTAMP\(?(\d+)?\)?(.+)?/);
-              if (m) {
+          if (dataType) {
+            row.ORG_DATA_TYPE = dataType;
+            switch (dataType) {
+              case 'NCHAR':
+                dataType = 'CHAR';
+                break;
+              case 'NCLOB':
+                dataType = 'CLOB';
+                break;
+              case 'VARCHAR2':
+              case 'NVARCHAR2':
+              case 'LONG':
+              case 'ROWID':
+              case 'UROWID':
+                dataType = 'VARCHAR';
+                break;
+              case 'LONG RAW':
+              case 'BINARY_FLOAT':
+              case 'BINARY_DOUBLE':
+              case 'RAW':
+                dataType = 'BUFFER';
+                break;
+              case 'DATE':
                 dataType = 'TIMESTAMP';
+                break;
+              default: {
+                let m = dataType.match(/TIMESTAMP\(?(\d+)?\)?(.+)?/);
+                if (m) {
+                  dataType = 'TIMESTAMP';
+                }
               }
             }
+            row.DATA_TYPE = dataType;
           }
-
-          row.DATA_TYPE = dataType;
+          if (row.NULLABLE !== null) {
+            row.NULLABLE = row.NULLABLE === 'Y';
+          }
         });
   }
 
   /**
    *
-   * @param {Object} options
-   * @param {string} options.fields
    * @return {Statement}
    * @protected
    */
-  _getListPrimaryKeysStatement(options) {
-    const srcflds = options.fields;
-    const fields = [];
-    if (!srcflds.length || srcflds.includes('schema_name'))
-      fields.push('ac.owner schema_name');
-    if (!srcflds.length || srcflds.includes('table_name'))
-      fields.push('ac.table_name');
-    if (!srcflds.length || srcflds.includes('constraint_name'))
-      fields.push('ac.constraint_name');
-    if (!srcflds.length || srcflds.includes('status'))
-      fields.push(sqb.case()
-          .when(['ac.status', 'ENABLED'])
-          .then(1)
-          .else(0)
-          .as('status'));
-    if (!srcflds.length || srcflds.includes('columns'))
-      fields.push(sqb.raw('to_char(listagg(acc.column_name) within group (order by null)) columns'));
-    return this.dbobj.select(...fields)
+  _getListPrimaryKeysStatement() {
+    return this.dbobj
+        .select('ac.owner schema_name', 'ac.table_name',
+            'ac.constraint_name', 'ac.status',
+            sqb.raw('to_char(listagg(acc.column_name) within group (order by null)) columns'))
         .from('all_constraints ac')
         .join(
             sqb.innerJoin('all_cons_columns acc').on(
@@ -224,36 +159,18 @@ class OracledbMetaData extends sqb.MetaData {
 
   /**
    *
-   * @param {Object} options
-   * @param {string} options.fields
    * @return {Statement}
    * @protected
    */
-  _getListForeignKeysStatement(options) {
-    const srcflds = options.fields;
-    const fields = [];
-    if (!srcflds.length || srcflds.includes('schema_name'))
-      fields.push('ac.owner schema_name');
-    if (!srcflds.length || srcflds.includes('table_name'))
-      fields.push('ac.table_name');
-    if (!srcflds.length || srcflds.includes('constraint_name'))
-      fields.push('ac.constraint_name');
-    if (!srcflds.length || srcflds.includes('status'))
-      fields.push(sqb.case()
-          .when(['ac.status', 'ENABLED'])
-          .then(1)
-          .else(0)
-          .as('status'));
-    if (!srcflds.length || srcflds.includes('column_name'))
-      fields.push(sqb.raw('to_char(listagg(acc.column_name) within group (order by null)) column_name'));
-    if (!srcflds.length || srcflds.includes('r_schema'))
-      fields.push(sqb.raw('to_char(listagg(ac.r_owner) within group (order by null)) r_schema'));
-    if (!srcflds.length || srcflds.includes('r_table_name'))
-      fields.push(sqb.raw('to_char(listagg(acr.table_name) within group (order by null)) r_table_name'));
-    if (!srcflds.length || srcflds.includes('r_columns'))
-      fields.push(sqb.raw('to_char(listagg(acr.column_name) within group (order by null)) r_columns'));
-
-    return this.dbobj.select(...fields)
+  _getListForeignKeysStatement() {
+    return this.dbobj
+        .select('ac.owner schema_name', 'ac.table_name',
+            'ac.constraint_name', 'ac.status',
+            sqb.raw('to_char(listagg(acc.column_name) within group (order by null)) column_name'),
+            sqb.raw('to_char(listagg(ac.r_owner) within group (order by null)) r_schema'),
+            sqb.raw('to_char(listagg(acr.table_name) within group (order by null)) r_table_name'),
+            sqb.raw('to_char(listagg(acr.column_name) within group (order by null)) r_columns')
+        )
         .from('all_constraints ac')
         .join(
             sqb.innerJoin('all_cons_columns acc').on(

@@ -28,6 +28,10 @@ class OracledbConnection extends Connection {
     this.intlcon = intlcon;
   }
 
+  acquire() {
+    super.acquire();
+  }
+
   //noinspection JSUnusedGlobalSymbols
   get sessionId() {
     return this.intlcon && this.intlcon._sessionId;
@@ -57,8 +61,9 @@ class OracledbConnection extends Connection {
   _close() {
     super._close();
     if (this.intlcon) {
-      this.intlcon.close();
+      const obj = this.intlcon;
       this.intlcon = undefined;
+      obj.close();
     }
   }
 
@@ -76,7 +81,10 @@ class OracledbConnection extends Connection {
     //noinspection JSUnresolvedFunction,Eslint
     super._execute.apply(this, arguments);
 
-    assert.ok(!this.closed);
+    if (this.closed) {
+      callback(new Error('Can not execute while connection is closed'));
+      return;
+    }
 
     //noinspection JSUnresolvedVariable
     const self = this;
@@ -102,28 +110,33 @@ class OracledbConnection extends Connection {
         callback(err2);
       } else {
         const out = {};
-        const metaData = {};
-        response.metaData.forEach((item, idx) => {
-          const o = metaData[item.name] = {index: idx};
-          // fetchType
-          let a = fetchTypeMap[item.fetchType];
-          if (a) o.jsType = a;
-          a = dbTypeMap[item.dbType];
-          // dbType
-          if (a) o.dbType = a;
-          if (item.byteSize) o.byteSize = item.byteSize;
-          if (!item.nullable) o.required = true;
-          if (item.precision) o.precision = item.precision;
-          if (item.precision > 0) o.precision = item.precision;
-          else item.dbType = 'FLOAT';
-        });
-        if (options.resultSet) {
+        let metaData;
+        if (response.metaData) {
+          metaData = {};
+          response.metaData.forEach((item, idx) => {
+            const o = metaData[item.name] = {index: idx};
+            // fetchType
+            let a = fetchTypeMap[item.fetchType];
+            if (a) o.jsType = a;
+            a = dbTypeMap[item.dbType];
+            // dbType
+            if (a) o.dbType = a;
+            if (item.byteSize) o.byteSize = item.byteSize;
+            if (!item.nullable) o.required = true;
+            if (item.precision) o.precision = item.precision;
+            if (item.precision > 0) o.precision = item.precision;
+            else item.dbType = 'FLOAT';
+          });
+        }
+        if (options.resultSet && response.resultSet) {
           response.metaData = metaData;
           out.resultSet =
               new OracledbResultSet(self, options.resultSet, response);
         } else {
-          out.rows = response.rows;
-          out.metaData = metaData;
+          if (response.rows)
+            out.rows = response.rows;
+          if (metaData)
+            out.metaData = metaData;
         }
         if (response.rowsAffected)
           out.rowsAffected = response.rowsAffected;

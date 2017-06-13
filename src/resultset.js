@@ -9,6 +9,7 @@
 /* External module dependencies. */
 const sqb = require('sqb');
 const ResultSet = sqb.ResultSet;
+//const debug = require('debug')('OracledbResultSet');
 
 /**
  * @class
@@ -23,12 +24,10 @@ class OracledbResultSet extends ResultSet {
   }
 
   //noinspection JSUnusedGlobalSymbols
-  close(callback) {
+  _close(callback) {
     if (this._nested) {
       this._nested.close(err => {
-        if (err)
-          callback(err);
-        else super.close(callback);
+        callback(err);
       });
     }
   }
