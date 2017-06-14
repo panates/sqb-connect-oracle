@@ -11,7 +11,7 @@ const OracledbMetaData = require('./metadata');
 const OracledbResultSet = require('./resultset');
 
 /* External module dependencies. */
-const {Connection} = require('sqb');
+const {Connection, TableMetaData} = require('sqb');
 const assert = require('assert');
 //noinspection SpellCheckingInspection,NpmUsedModulesInstalled
 const oracledb = require('oracledb');
@@ -112,20 +112,22 @@ class OracledbConnection extends Connection {
         const out = {};
         let metaData;
         if (response.metaData) {
-          metaData = {};
-          response.metaData.forEach((item, idx) => {
-            const o = metaData[item.name] = {index: idx};
+          //console.log(response.metaData);
+          metaData = new TableMetaData();
+          response.metaData.forEach((v, idx) => {
+            const o = {name: v.name};
             // fetchType
-            let a = fetchTypeMap[item.fetchType];
+            let a = fetchTypeMap[v.fetchType];
             if (a) o.jsType = a;
-            a = dbTypeMap[item.dbType];
+            a = dbTypeMap[v.dbType];
             // dbType
             if (a) o.dbType = a;
-            if (item.byteSize) o.byteSize = item.byteSize;
-            if (!item.nullable) o.required = true;
-            if (item.precision) o.precision = item.precision;
-            if (item.precision > 0) o.precision = item.precision;
-            else item.dbType = 'FLOAT';
+            if (v.byteSize) o.size = v.byteSize;
+            if (v.nullable) o.nullable = v.nullable;
+            if (v.precision) o.precision = v.precision;
+            if (v.precision > 0) o.precision = v.precision;
+            else v.dbType = 'FLOAT';
+            metaData.add(o);
           });
         }
         if (options.resultSet && response.resultSet) {
