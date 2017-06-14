@@ -112,7 +112,6 @@ class OracledbConnection extends Connection {
         const out = {};
         let metaData;
         if (response.metaData) {
-          //console.log(response.metaData);
           metaData = new TableMetaData();
           response.metaData.forEach((v, idx) => {
             const o = {name: v.name};
