@@ -11,7 +11,7 @@ const OracledbMetaData = require('./metadata');
 const OracledbResultSet = require('./resultset');
 
 /* External module dependencies. */
-const {Connection, TableMetaData} = require('sqb');
+const {Connection, FieldsMeta} = require('sqb');
 const assert = require('assert');
 //noinspection SpellCheckingInspection,NpmUsedModulesInstalled
 const oracledb = require('oracledb');
@@ -26,15 +26,11 @@ class OracledbConnection extends Connection {
   constructor(dbpool, intlcon) {
     super(dbpool);
     this.intlcon = intlcon;
+    this._sessionId = this.intlcon._sessionId;
   }
 
   acquire() {
     super.acquire();
-  }
-
-  //noinspection JSUnusedGlobalSymbols
-  get sessionId() {
-    return this.intlcon && this.intlcon._sessionId;
   }
 
   /**
@@ -58,12 +54,12 @@ class OracledbConnection extends Connection {
   /**
    * @override
    */
-  _close() {
+  _close(callback) {
     super._close();
     if (this.intlcon) {
       const obj = this.intlcon;
       this.intlcon = undefined;
-      obj.close();
+      obj.close(callback);
     }
   }
 
@@ -112,7 +108,7 @@ class OracledbConnection extends Connection {
         const out = {};
         let metaData;
         if (response.metaData) {
-          metaData = new TableMetaData();
+          metaData = new FieldsMeta();
           response.metaData.forEach((v, idx) => {
             const o = {name: v.name};
             // fetchType

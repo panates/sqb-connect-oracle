@@ -9,7 +9,7 @@
 /* External module dependencies. */
 const sqb = require('sqb');
 const ResultSet = sqb.ResultSet;
-//const debug = require('debug')('OracledbResultSet');
+const debug = require('debug')('OracledbResultSet');
 
 /**
  * @class
@@ -25,19 +25,34 @@ class OracledbResultSet extends ResultSet {
 
   //noinspection JSUnusedGlobalSymbols
   _close(callback) {
-    if (this._nested) {
-      this._nested.close(err => {
-        callback(err);
-      });
-    }
+    this._closeCursor(err => callback(err));
   }
 
   //noinspection JSUnusedGlobalSymbols
   _fetchDbRows(rowCount, callback) {
     const self = this;
     if (self._nested) {
-      self._nested.getRows(rowCount, callback);
-    } else callback(undefined, []);
+      self._nested.getRows(rowCount, (err, rows) => {
+        if (err || (rows && rows.length))
+          callback(err, rows);
+        else
+          /* It is better to close nested resultset, becaouse all records fetched.  */
+          self._closeCursor(err => callback(err));
+      });
+    } else callback();
+  }
+
+  _closeCursor(callback) {
+    const self = this;
+    if (self._nested)
+      self._nested.close(err => {
+        if (!err)
+          self._nested = undefined;
+        else if (process.env.DEBBUG)
+          debug('Nested Oracle ResultSet closed');
+        callback(err);
+      });
+    else callback();
   }
 
 }

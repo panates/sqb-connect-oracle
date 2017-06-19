@@ -23,13 +23,13 @@
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
-    "eslint": "^3.19.0",
+    "eslint": "^4.0.0",
     "eslint-config-google": "^0.8.0",
     "istanbul": "^0.4.5",
     "mocha": "^3.4.2"
   },
   "peerDependencies": {
-    "sqb": "^0.4.9",
+    "sqb": "^0.4.12",
     "sqb-serializer-oracle": "^0.0.10"
   },
   "engines": {
