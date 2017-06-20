@@ -19,7 +19,8 @@
   ],
   "dependencies": {
     "debug": "^2.6.8",
-    "oracledb": "^1.13.1"
+    "oracledb": "^1.13.1",
+    "sqb-serializer-oracle": "^0.1.0"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
@@ -29,8 +30,7 @@
     "mocha": "^3.4.2"
   },
   "peerDependencies": {
-    "sqb": "^0.4.16",
-    "sqb-serializer-oracle": "^0.0.15"
+    "sqb": "^0.4.16"
   },
   "engines": {
     "node": ">= 6.0"

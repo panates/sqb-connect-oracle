@@ -83,6 +83,7 @@ class OracledbPool extends DbPool {
           //noinspection JSUnresolvedVariable
           self.serverVersion =
               Math.trunc(internalConnection.oracleServerVersion / 100000000);
+          self.serializer.serverVersion = self.serverVersion;
           internalConnection._sessionId =
               (await internalConnection.execute('select sid from v$mystat where rownum <=1', [], {})).rows[0][0];
           //noinspection JSUnresolvedVariable

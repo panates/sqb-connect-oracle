@@ -12,7 +12,6 @@ const OracledbResultSet = require('./resultset');
 
 /* External module dependencies. */
 const {Connection, FieldsMeta} = require('sqb');
-const assert = require('assert');
 //noinspection SpellCheckingInspection,NpmUsedModulesInstalled
 const oracledb = require('oracledb');
 
