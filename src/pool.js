@@ -49,6 +49,18 @@ class OracledbPool extends DbPool {
     return new OracledbMetaData(this);
   }
 
+  /**
+   * Terminates the connection pool.
+   * @param {Function} callback
+   * @protected
+   * @abstract
+   */
+  _close(callback) {
+    if (!this._pool)
+      return callback();
+    this._pool.close(callback);
+  }
+
   //noinspection JSUnusedGlobalSymbols
   /**
    *
