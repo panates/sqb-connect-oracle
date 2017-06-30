@@ -44,15 +44,6 @@ class OracledbConnection extends Connection {
   /**
    * @override
    */
-  prepare(statement, params, options) {
-    return super.prepare(...// eslint-disable-next-line
-        arguments);
-  }
-
-  //noinspection JSUnusedGlobalSymbols
-  /**
-   * @override
-   */
   _close(callback) {
     super._close();
     if (this.intlcon) {

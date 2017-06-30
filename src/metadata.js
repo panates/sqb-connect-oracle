@@ -20,36 +20,36 @@ class OracledbMetaData extends sqb.MetaData {
   /**
    *
    * @param {Object} options
-   * @return {Statement}
+   * @return {Query}
    * @protected
    */
-  _getStatement(options) {
+  _getQuery(options) {
     if (options.type === 'list_schemas')
-      return this._getListSchemasStatement(options);
+      return this._getListSchemasQuery(options);
 
     if (options.type === 'list_tables')
-      return this._getListTablesStatement(options);
+      return this._getListTablesQuery(options);
 
     if (options.type === 'list_columns')
-      return this._getListColumnsStatement(options);
+      return this._getListColumnsQuery(options);
 
     if (options.type === 'list_primary_keys')
-      return this._getListPrimaryKeysStatement(options);
+      return this._getListPrimaryKeysQuery(options);
 
     if (options.type === 'list_foreign_keys')
-      return this._getListForeignKeysStatement(options);
+      return this._getListForeignKeysQuery(options);
 
     else
-      throw new Error('Unknown or unimplemented metadata statement type (' +
+      throw new Error('Unknown or unimplemented metadata query type (' +
           options.type + ')');
   }
 
   /**
    *
-   * @return {Statement}
+   * @return {Query}
    * @protected
    */
-  _getListSchemasStatement() {
+  _getListSchemasQuery() {
     return this.dbobj
         .select('username schema_name', 'created create_date')
         .from('all_users schemas');
@@ -57,10 +57,10 @@ class OracledbMetaData extends sqb.MetaData {
 
   /**
    *
-   * @return {Statement}
+   * @return {Query}
    * @protected
    */
-  _getListTablesStatement() {
+  _getListTablesQuery() {
     return this.dbobj
         .select('owner schema_name', 'table_name',
             'num_rows', 'read_only',
@@ -75,10 +75,10 @@ class OracledbMetaData extends sqb.MetaData {
 
   /**
    *
-   * @return {Statement}
+   * @return {Query}
    * @protected
    */
-  _getListColumnsStatement() {
+  _getListColumnsQuery() {
     return this.dbobj
         .select('owner schema_name', 'table_name',
             'column_name', 'data_type', 'data_length', 'data_precision',
@@ -135,10 +135,10 @@ class OracledbMetaData extends sqb.MetaData {
 
   /**
    *
-   * @return {Statement}
+   * @return {Query}
    * @protected
    */
-  _getListPrimaryKeysStatement() {
+  _getListPrimaryKeysQuery() {
     return this.dbobj
         .select('ac.owner schema_name', 'ac.table_name',
             'ac.constraint_name', 'ac.status',
@@ -157,10 +157,10 @@ class OracledbMetaData extends sqb.MetaData {
 
   /**
    *
-   * @return {Statement}
+   * @return {Query}
    * @protected
    */
-  _getListForeignKeysStatement() {
+  _getListForeignKeysQuery() {
     return this.dbobj
         .select('ac.owner schema_name', 'ac.table_name',
             'ac.constraint_name', 'ac.status',
@@ -187,7 +187,7 @@ class OracledbMetaData extends sqb.MetaData {
 }
 
 /**
- * @external Statement
+ * @external Query
  */
 
 /**
