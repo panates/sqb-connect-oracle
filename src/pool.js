@@ -135,7 +135,7 @@ class OracledbPool extends DbPool {
     oracledb.createPool({
       user: cfg.user,
       password: cfg.password,
-      connectString: cfg.connectString,
+      connectString: cfg.database || cfg.connectString,
       poolIncrement: cfg.pool.increment,
       poolMax: cfg.pool.max,
       poolMin: cfg.pool.min,

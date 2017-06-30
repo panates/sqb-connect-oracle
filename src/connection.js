@@ -76,7 +76,7 @@ class OracledbConnection extends Connection {
     const self = this;
     const oraOptions = {
       autoCommit: options.autoCommit,
-      extendedMetaData: true, // options.extendedMetaData,
+      extendedMetaData: options.extendedMetaData,
       maxRows: options.maxRows,
       prefetchRows: options.prefetchRows,
       resultSet: !!options.resultSet,
