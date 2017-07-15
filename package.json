@@ -8,13 +8,14 @@
   ],
   "license": "MIT",
   "repository": "panates/sqb-connect-oracledb",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "keywords": [
     "javascript",
     "sqb",
     "connect",
     "oracle",
     "database",
+    "adapter",
     "interface"
   ],
   "dependencies": {
@@ -24,13 +25,13 @@
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
-    "eslint": "^4.0.0",
-    "eslint-config-google": "^0.8.0",
+    "eslint": "^4.1.1",
+    "eslint-config-google": "^0.9.1",
     "istanbul": "^0.4.5",
     "mocha": "^3.4.2"
   },
   "peerDependencies": {
-    "sqb": "^0.5.0"
+    "sqb": "^0.6.3"
   },
   "engines": {
     "node": ">= 6.0"
@@ -38,7 +39,7 @@
   "files": [
     "LICENSE",
     "README.md",
-    "src/"
+    "lib/"
   ],
   "scripts": {
     "test": "mocha --require test/support/env --reporter spec --bail --check-leaks test/",
