@@ -22,7 +22,7 @@
     "debug": "^2.6.8",
     "oracledb": "^1.13.1",
     "putil-waterfall": "^1.0.8",
-    "sqb-serializer-oracle": "^0.3.2"
+    "sqb-serializer-oracle": "^0.4.0"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
