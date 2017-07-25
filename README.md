@@ -1,4 +1,4 @@
-# SQB-connect-oracledb
+# SQB-connect-oracle
 
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
@@ -15,13 +15,13 @@ SQB-connect is connection plugin for Oracle database using "oracledb" library
 ### License
 [MIT](LICENSE)
 
-[npm-image]: https://img.shields.io/npm/v/sqb-connect-oracledb.svg
-[npm-url]: https://npmjs.org/package/sqb-connect-oracledb
-[downloads-image]: https://img.shields.io/npm/dm/sqb-connect-oracledb.svg
-[downloads-url]: https://npmjs.org/package/sqb-connect-oracledb
-[dependencies-image]: https://david-dm.org/panates/sqb-connect-oracledb.svg
-[dependencies-url]:https://david-dm.org/panates/sqb-connect-oracledb#info=dependencies
-[devdependencies-image]: https://david-dm.org/panates/sqb-connect-oracledb/dev-status.svg
-[devdependencies-url]:https://david-dm.org/panates/sqb-connect-oracledb?type=dev
-[peerdependencies-image]: https://david-dm.org/panates/sqb-connect-oracledb/peer-status.svg
-[peerdependencies-url]:https://david-dm.org/panates/sqb-connect-oracledb?type=peer
+[npm-image]: https://img.shields.io/npm/v/sqb-connect-oracle.svg
+[npm-url]: https://npmjs.org/package/sqb-connect-oracle
+[downloads-image]: https://img.shields.io/npm/dm/sqb-connect-oracle.svg
+[downloads-url]: https://npmjs.org/package/sqb-connect-oracle
+[dependencies-image]: https://david-dm.org/panates/sqb-connect-oracle.svg
+[dependencies-url]:https://david-dm.org/panates/sqb-connect-oracle#info=dependencies
+[devdependencies-image]: https://david-dm.org/panates/sqb-connect-oracle/dev-status.svg
+[devdependencies-url]:https://david-dm.org/panates/sqb-connect-oracle?type=dev
+[peerdependencies-image]: https://david-dm.org/panates/sqb-connect-oracle/peer-status.svg
+[peerdependencies-url]:https://david-dm.org/panates/sqb-connect-oracle?type=peer

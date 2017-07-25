@@ -1,5 +1,5 @@
 {
-  "name": "sqb-connect-oracledb",
+  "name": "sqb-connect-oracle",
   "description": "SQB Connection plugin for Oracle database using 'oracledb' library",
   "version": "0.4.3",
   "author": "Panates Ltd.",
@@ -7,7 +7,7 @@
     "Eray Hanoglu <e.hanoglu@panates.com>"
   ],
   "license": "MIT",
-  "repository": "panates/sqb-connect-oracledb",
+  "repository": "panates/sqb-connect-oracle",
   "main": "lib/index.js",
   "keywords": [
     "javascript",
@@ -21,17 +21,15 @@
   "dependencies": {
     "debug": "^2.6.8",
     "oracledb": "^1.13.1",
-    "sqb-serializer-oracle": "^0.3.0"
+    "putil-waterfall": "^1.0.8",
+    "sqb-serializer-oracle": "^0.3.2"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
-    "eslint": "^4.1.1",
+    "eslint": "^4.2.0",
     "eslint-config-google": "^0.9.1",
     "istanbul": "^0.4.5",
     "mocha": "^3.4.2"
-  },
-  "peerDependencies": {
-    "sqb": "^0.6.3"
   },
   "engines": {
     "node": ">= 6.0"
