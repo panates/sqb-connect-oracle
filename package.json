@@ -1,7 +1,7 @@
 {
   "name": "sqb-connect-oracle",
   "description": "SQB Connection plugin for Oracle database using 'oracledb' library",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "author": "Panates Ltd.",
   "contributors": [
     "Eray Hanoglu <e.hanoglu@panates.com>"
