@@ -19,17 +19,20 @@
     "interface"
   ],
   "dependencies": {
-    "debug": "^2.6.8",
+    "debug": "^3.0.1",
     "oracledb": "^1.13.1",
     "putil-waterfall": "^1.0.8",
-    "sqb-serializer-oracle": "^0.4.0"
+    "sqb-serializer-oracle": "^0.4.3"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
-    "eslint": "^4.2.0",
+    "eslint": "^4.6.1",
     "eslint-config-google": "^0.9.1",
     "istanbul": "^0.4.5",
-    "mocha": "^3.4.2"
+    "mocha": "^3.5.0"
+  },
+  "peerDependencies": {
+    "sqb": "^0.7.10"
   },
   "engines": {
     "node": ">= 6.0"
