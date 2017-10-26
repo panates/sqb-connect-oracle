@@ -10,7 +10,7 @@ SQB-connect is connection plugin for Oracle database using "oracledb" library
 
 ## Node Compatibility
 
-  - node `>= 6.x`;
+  - node `>= 4.x`;
   
 ### License
 [MIT](LICENSE)
