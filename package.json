@@ -19,7 +19,6 @@
     "interface"
   ],
   "dependencies": {
-    "debug": "^3.1.0",
     "oracledb": "^1.13.1",
     "putil-waterfall": "^1.1.2",
     "sqb-serializer-oracle": "^0.7.0"
@@ -32,7 +31,7 @@
     "mocha": "^4.0.1"
   },
   "peerDependencies": {
-    "sqb": "^0.12.1"
+    "sqb": "^1.0.0-beta.1"
   },
   "engines": {
     "node": ">= 4.0"
