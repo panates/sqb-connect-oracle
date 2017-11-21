@@ -1,6 +1,6 @@
 {
   "name": "sqb-connect-oracle",
-  "description": "SQB Connection plugin for Oracle",
+  "description": "Oracle connection adapter for SQB",
   "version": "0.9.1",
   "author": "Panates Ltd.",
   "contributors": [
@@ -21,17 +21,18 @@
   "dependencies": {
     "oracledb": "^1.13.1",
     "putil-waterfall": "^1.1.2",
-    "sqb-serializer-oracle": "^0.7.0"
+    "sqb-serializer-oracle": "^0.8.1"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.2",
     "eslint": "^4.11.0",
     "eslint-config-google": "^0.9.1",
     "istanbul": "^0.4.5",
-    "mocha": "^4.0.1"
+    "mocha": "^4.0.1",
+    "sqb": "^1.0.0-beta.2"
   },
   "peerDependencies": {
-    "sqb": "^1.0.0-beta.1"
+    "sqb": "^1.0.0-beta.2"
   },
   "engines": {
     "node": ">= 4.0"
