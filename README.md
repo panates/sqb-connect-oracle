@@ -114,6 +114,19 @@ const pool = sqb.pool({
 })
 ```
 
+### Additional parameters
+
+```js
+sqb.use('sqb-connect-oracle');
+const pool = sqb.pool({
+  dialect: 'oracle',
+  ** Connection options here 
+  schema: 'otherschema'
+})
+```
+
+- `schema`: Sets default schema for session
+
 ## Node Compatibility
 
   - node `>= 4.x`;
