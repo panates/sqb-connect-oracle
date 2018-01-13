@@ -29,10 +29,10 @@
     "eslint-config-google": "^0.9.1",
     "istanbul": "^0.4.5",
     "mocha": "^4.0.1",
-    "sqb": "^1.0.0-beta.9"
+    "sqb": "^1.0.1-alpha.1"
   },
   "peerDependencies": {
-    "sqb": "^1.0.0-beta.9"
+    "sqb": "^1.0.1-alpha.1"
   },
   "engines": {
     "node": ">= 4.0"
@@ -44,7 +44,7 @@
   ],
   "scripts": {
     "test": "mocha --require test/support/env --reporter spec --bail --check-leaks test/",
-    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --require test/support/env --reporter dot --check-leaks test/",
-    "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --require test/support/env --reporter spec --check-leaks test/"
+    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec --require test/support/env --reporter dot --check-leaks test/",
+    "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --require test/support/env --reporter spec --check-leaks test/"
   }
 }
