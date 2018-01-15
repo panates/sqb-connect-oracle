@@ -1,7 +1,7 @@
 {
   "name": "sqb-connect-oracle",
   "description": "Oracle connection adapter for SQB",
-  "version": "0.15.0",
+  "version": "0.15.1",
   "author": "Panates Ltd.",
   "contributors": [
     "Eray Hanoglu <e.hanoglu@panates.com>"
