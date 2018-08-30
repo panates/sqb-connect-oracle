@@ -1,7 +1,7 @@
 {
   "name": "sqb-connect-oracle",
   "description": "Oracle connection adapter for SQB",
-  "version": "0.15.1",
+  "version": "3.0.0",
   "author": "Panates Ltd.",
   "contributors": [
     "Eray Hanoglu <e.hanoglu@panates.com>"
@@ -19,23 +19,23 @@
     "interface"
   ],
   "dependencies": {
-    "oracledb": "^2.0.15",
-    "putil-waterfall": "^1.1.2",
-    "sqb-serializer-oracle": "^0.8.1"
+    "oracledb": "^2.3.0",
+    "putil-waterfall": "^2.0.2",
+    "sqb-serializer-oracle": "^3.0.0"
   },
   "devDependencies": {
-    "babel-eslint": "^8.2.1",
-    "eslint": "^4.15.0",
+    "babel-eslint": "^9.0.0",
+    "eslint": "^5.4.0",
     "eslint-config-google": "^0.9.1",
     "istanbul": "^0.4.5",
-    "mocha": "^4.1.0",
-    "sqb": "^1.0.1-alpha.3"
+    "mocha": "^5.2.0",
+    "sqb": "^3.2.4"
   },
   "peerDependencies": {
-    "sqb": "^1.0.1-alpha.3"
+    "sqb": ">=3.2.4"
   },
   "engines": {
-    "node": ">= 4.0"
+    "node": ">= 6.0"
   },
   "files": [
     "LICENSE",
@@ -44,7 +44,7 @@
   ],
   "scripts": {
     "test": "mocha --require test/support/env --reporter spec --bail --check-leaks test/",
-    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec --require test/support/env --reporter dot --check-leaks test/",
-    "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --require test/support/env --reporter spec --check-leaks test/"
+    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --require test/support/env-travis --reporter dot --check-leaks test/",
+    "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --require test/support/env-travis --reporter spec --check-leaks test/"
   }
 }

@@ -129,7 +129,7 @@ const pool = sqb.pool({
 
 ## Node Compatibility
 
-  - node `>= 4.x`;
+  - node (LTE only) `>= 6.x`;
   
 ### License
 [MIT](LICENSE)
