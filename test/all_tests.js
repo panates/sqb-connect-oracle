@@ -22,7 +22,7 @@ describe('sqb-connect-oracle', function() {
 
   describe('Driver', function() {
 
-    it('should initialize pool with pg driver', function() {
+    it('should initialize pool with oracle driver', function() {
       pool = sqb.pool({
         dialect: 'oracle',
         user: (process.env.DB_USER || 'SYSDBA'),
@@ -40,7 +40,7 @@ describe('sqb-connect-oracle', function() {
           autoCommit: false
         }
       });
-      assert(pool.dialect, 'pg');
+      assert(pool.dialect, 'oracle');
     });
 
     it('should test pool', function() {
