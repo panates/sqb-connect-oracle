@@ -2,7 +2,7 @@
 require('./support/env');
 const assert = require('assert');
 const sqb = require('sqb');
-const createTestTables = require('./support/createTestTables');
+const createDatabase = require('./support/createDatabase');
 const waterfall = require('putil-waterfall');
 
 sqb.use(require('../'));
@@ -55,11 +55,14 @@ describe('sqb-connect-oracle', function() {
 
     if (!process.env.SKIP_CREATE_TABLES) {
       it('create test tables', function() {
-        this.slow(4000);
+        this.slow(1000);
         return pool.acquire(connection => {
-          return createTestTables(connection._client.intlcon);
+          return createDatabase(connection._client.intlcon, {
+            structureScript: 'db_structure.sql',
+            dataFiles: 'table-data/*.json'
+          });
         });
-      }).timeout(4000);
+      }).timeout(10000);
     }
 
     it('should fetch "airports" table (objectRows=false)', function() {
@@ -128,6 +131,30 @@ describe('sqb-connect-oracle', function() {
       pool.execute('invalid sql').then(() => {
         done(new Error('Failed'));
       }).catch(() => done());
+    });
+
+    it('should insert record with returning', function() {
+      return pool.insert('sqb_test.airports', {
+        'ID': 'X001',
+        'ShortName': 'TEST',
+        'Name': 'Test1'
+      }).returning({ID: 'string'})
+          .execute().then(result => {
+            assert(result);
+            assert(result.rows);
+            assert.equal(result.rows[0].id, 'X001');
+          });
+    });
+
+    it('should update record with returning', function() {
+      return pool.update('sqb_test.airports', {Catalog: 3345})
+          .where({ID: 'LFOI'})
+          .returning({Catalog: 'number'})
+          .execute().then(result => {
+            assert(result);
+            assert(result.rows);
+            assert.equal(result.rows[0].catalog, 3345);
+          });
     });
 
     it('should call startTransaction more than one', function() {

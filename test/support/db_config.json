@@ -1,0 +1,9 @@
+{
+  "dialect": "oracle",
+  "user": "pntdba",
+  "password": "pntdba",
+  "host": "192.168.35.15",
+  "port": 1521,
+  "database": "etfal",
+  "skip_create_tables": 0
+}
