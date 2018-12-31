@@ -7,7 +7,10 @@
     "Eray Hanoglu <e.hanoglu@panates.com>"
   ],
   "license": "MIT",
-  "repository": "panates/sqb-connect-oracle",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sqbjs/sqb-connect-oracle.git"
+  },
   "main": "lib/index.js",
   "keywords": [
     "javascript",
@@ -19,20 +22,20 @@
     "interface"
   ],
   "dependencies": {
-    "oracledb": "^3.0.0",
-    "putil-waterfall": "^2.0.3",
-    "sqb-serializer-oracle": "^3.3.0"
+    "oracledb": "^3.0.1",
+    "putil-waterfall": "^2.1.1",
+    "sqb-serializer-oracle": "^3.3.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
-    "eslint": "^5.6.1",
-    "eslint-config-google": "^0.10.0",
-    "nyc": "^13.0.1",
+    "eslint": "^5.11.1",
+    "eslint-config-google": "^0.11.0",
+    "nyc": "^13.1.0",
     "mocha": "^5.2.0",
-    "sqb": "^3.5.0"
+    "sqb": "^3.6.1"
   },
   "peerDependencies": {
-    "sqb": ">=3.4.4"
+    "sqb": ">=3.6.1"
   },
   "engines": {
     "node": ">= 6.0"
